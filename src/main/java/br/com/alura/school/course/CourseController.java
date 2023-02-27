@@ -1,5 +1,7 @@
 package br.com.alura.school.course;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -7,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -21,8 +25,9 @@ class CourseController {
     }
 
     @GetMapping("/courses")
-    ResponseEntity<List<CourseResponse>> allCourses() {
-        return ResponseEntity.ok().build();
+    ResponseEntity<List<CourseResponse>> allCourses(@PageableDefault(size = 10) Pageable pageable) {
+        List<CourseResponse> courseResponses = courseRepository.findAll(pageable).getContent().stream().map(CourseResponse::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(courseResponses);
     }
 
     @GetMapping("/courses/{code}")
