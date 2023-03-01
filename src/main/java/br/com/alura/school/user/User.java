@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -30,9 +30,13 @@ class User {
     @Deprecated
     protected User() {}
 
-    User(String username, String email) {
+   public User(String username, String email) {
         this.username = username;
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     String getUsername() {
